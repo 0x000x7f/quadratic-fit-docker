@@ -1,0 +1,19 @@
+# Pythonキャッシュ類
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Jupyter Notebookのチェックポイント
+.ipynb_checkpoints/
+
+# C++ビルド生成物
+*.o
+*.out
+*.exe
+
+# VSCodeなどIDE設定
+.vscode/
+*.code-workspace
+
+# macOS固有
+.DS_Store
