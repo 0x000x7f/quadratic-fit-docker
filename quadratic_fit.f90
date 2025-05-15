@@ -4,18 +4,18 @@ subroutine quadratic_fit(x, y, n, coeffs)
   real(8), intent(in) :: x(n), y(n)
   real(8), intent(out) :: coeffs(3)
 
-  real(8) :: Xmat(n, 3)
-  real(8) :: xtx(3, 3), xty(3)
+  real(8) :: Xmat(n,3)
+  real(8) :: xtx(3,3), xty(3)
   integer :: i, j, k
 
-  ! 構築
+  ! 行列Xmatの構築
   do i = 1, n
     Xmat(i,1) = x(i)**2
     Xmat(i,2) = x(i)
     Xmat(i,3) = 1.0d0
   end do
 
-  ! xtx = X^T * X
+  ! X^T X の計算
   do i = 1, 3
     do j = 1, 3
       xtx(i,j) = 0.0d0
@@ -25,7 +25,7 @@ subroutine quadratic_fit(x, y, n, coeffs)
     end do
   end do
 
-  ! xty = X^T * y
+  ! X^T y の計算
   do i = 1, 3
     xty(i) = 0.0d0
     do k = 1, n
@@ -33,5 +33,6 @@ subroutine quadratic_fit(x, y, n, coeffs)
     end do
   end do
 
-  coeffs = xty  ! ← 本来は np.linalg.solve に渡す
+  ! 解法部分は外部から呼び出すか、後で実装
+
 end subroutine quadratic_fit
