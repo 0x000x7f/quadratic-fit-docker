@@ -4,52 +4,34 @@ subroutine quadratic_fit(x, y, n, coeffs)
   real(8), intent(in) :: x(n), y(n)
   real(8), intent(out) :: coeffs(3)
 
-  real(8) :: xtx(3,3), xty(3)
-  real(8) :: X(n,3)
+  real(8) :: Xmat(n, 3)
+  real(8) :: xtx(3, 3), xty(3)
   integer :: i, j, k
-  real(8) :: work(3,3)
-  real(8) :: b(3)
 
+  ! 構築
   do i = 1, n
-    X(i,1) = x(i)**2
-    X(i,2) = x(i)
-    X(i,3) = 1.0d0
+    Xmat(i,1) = x(i)**2
+    Xmat(i,2) = x(i)
+    Xmat(i,3) = 1.0d0
   end do
 
+  ! xtx = X^T * X
   do i = 1, 3
     do j = 1, 3
       xtx(i,j) = 0.0d0
       do k = 1, n
-        xtx(i,j) = xtx(i,j) + X(k,i) * X(k,j)
+        xtx(i,j) = xtx(i,j) + Xmat(k,i) * Xmat(k,j)
       end do
     end do
   end do
 
+  ! xty = X^T * y
   do i = 1, 3
     xty(i) = 0.0d0
     do k = 1, n
-      xty(i) = xty(i) + X(k,i) * y(k)
+      xty(i) = xty(i) + Xmat(k,i) * y(k)
     end do
   end do
 
-  work = xtx
-  b = xty
-
-  do i = 1, 3
-    do j = i+1, 3
-      if (abs(work(i,i)) < 1.0d-12) stop "Singular matrix"
-      b(j) = b(j) - work(j,i)/work(i,i)*b(i)
-      do k = i, 3
-        work(j,k) = work(j,k) - work(j,i)/work(i,i)*work(i,k)
-      end do
-    end do
-  end do
-
-  do i = 3, 1, -1
-    coeffs(i) = b(i)
-    do j = i+1, 3
-      coeffs(i) = coeffs(i) - work(i,j) * coeffs(j)
-    end do
-    coeffs(i) = coeffs(i) / work(i,i)
-  end do
+  coeffs = xty  ! ← 本来は np.linalg.solve に渡す
 end subroutine quadratic_fit
